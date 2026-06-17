@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restream Custom Widget</title>
+    <style>
+        /* Essential for OBS/Restream Overlays */
+        body {
+            margin: 0;
+            padding: 0;
+            background: transparent !important; /* Ensures the background is see-through */
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Widget Container */
+        #widget-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Positions alert at the top */
+            padding-top: 50px;
+        }
+
+        /* Alert Box Styling */
+        .alert-box {
+            background: rgba(20, 20, 30, 0.95);
+            border-left: 5px solid #ff4757; /* Restream-style accent color */
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.2rem;
+            transform: translateY(-150%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Animation Trigger Classes */
+        .alert-box.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .alert-type {
+            font-weight: bold;
+            color: #ff4757;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .username {
+            font-weight: 600;
+            color: #2ed573;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="widget-container">
+        <div id="alert" class="alert-box">
+            <span class="alert-type" id="alert-type">Alert</span>
+            <span id="alert-message">is now following!</span>
+        </div>
+    </div>
+
+    <script>
+        const alertBox = document.getElementById('alert');
+        const alertType = document.getElementById('alert-type');
+        const alertMessage = document.getElementById('alert-message');
+
+        // Function to trigger the widget animation
+        function triggerAlert(type, name) {
+            // Update text
+            alertType.innerText = `${type}:`;
+            alertMessage.innerHTML = `<span class="username">${name}</span> just joined the crew!`;
+
+            // Play show animation
+            alertBox.classList.add('show');
+
+            // Hide after 5 seconds
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // SIMULATION: Triggers a test alert 2 seconds after loading
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                triggerAlert('New Follower', 'StreamerPro99');
+            }, 2000);
+        });
+
+        /* 
+        PRO-TIP: If you want to connect this to real chat/alerts, 
+        you would implement a WebSocket listener here (e.g., Twitch, 
+        Streamlabs, or Restream's API).
+        */
+    </script>
+</body>
+</html>
